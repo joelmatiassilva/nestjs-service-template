@@ -4,6 +4,14 @@ import { defineConfig } from "vitest/config";
 import { createVitestTestConfig } from "./create-vitest-test-config";
 
 export default defineConfig({
-  test: createVitestTestConfig("(unit|e2e)"),
+  test: {
+    ...createVitestTestConfig("(unit|e2e)"),
+    exclude: [
+      '**/node_modules/**',
+      '**/postgres/**',
+      '**/postgres_data/**',
+      '**/pgadmin_data/**'
+    ]
+  },
   plugins: [swc.vite()],
 });
