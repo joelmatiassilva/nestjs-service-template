@@ -8,5 +8,5 @@ coverage/
 .vscode
 .nyc_output
 k6-results
-pgadmin
-postgres
+pgadmin/
+postgres/
