@@ -8,6 +8,8 @@ services:
         - PORT=${PORT:-3000}
     ports:
       - "${PORT:-3000}:${PORT:-3000}"
+    networks:
+      - postgres_network
     deploy:
       resources:
         limits:
@@ -16,6 +18,8 @@ services:
         reservations:
           cpus: "0.25"
           memory: "256m"
+    depends_on:
+      - db
 
   my-service-dev:
     container_name: my-service-dev
@@ -31,6 +35,9 @@ services:
       - "9229:9229"
     volumes:
       - ./src:/app/src
+      - ./prisma:/app/prisma
+    networks:
+      - postgres_network
     deploy:
       resources:
         limits:
@@ -39,6 +46,41 @@ services:
         reservations:
           cpus: "0.25"
           memory: "256m"
+    depends_on:
+      - db
+
+  db:
+    container_name: postgres_database
+    image: postgres:16.3
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=my_db
+      - POSTGRES_USER=postgres
+    networks:
+      - postgres_network
+    restart: always
+    ports:
+      - "5432:5432"
+
+  pgAdmin:
+    depends_on:
+      - db
+    container_name: pgadmin4
+    image: dpage/pgadmin4:8.6
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=superman@google.com
+      - PGADMIN_DEFAULT_PASSWORD=123456
+      - PGADMIN_CONFIG_SERVER_MODE=False
+      - PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED=False
+    networks:
+      - postgres_network
+    restart: always
 
   k6:
     image: ghcr.io/grafana/xk6-dashboard:0.7.2
@@ -58,3 +100,11 @@ services:
       "--out", "web-dashboard",
       "/tests/performance/contexts/users/get-users.mjs"
     ]
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+
+networks:
+  postgres_network:
+    driver: bridge

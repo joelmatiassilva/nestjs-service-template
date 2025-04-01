@@ -21,6 +21,7 @@ COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
 COPY src src
+COPY prisma prisma
 
 EXPOSE $PORT
 CMD ["node", "--run", "dev"]
@@ -40,6 +41,7 @@ COPY tsconfig*.json .
 COPY .swcrc .
 COPY nest-cli.json .
 COPY src src
+COPY prisma prisma
 
 RUN node --run build && \
     pnpm prune --prod

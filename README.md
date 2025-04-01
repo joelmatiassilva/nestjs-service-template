@@ -75,6 +75,47 @@ The project is fully dockerized 🐳, if we want to start the app in **developme
 docker-compose up -d my-service-dev
 ```
 
+## 🐳 Ejecutar migraciones y verificar datos
+
+Para ejecutar las migraciones de Prisma y verificar los datos en la base de datos, sigue estos pasos:
+
+1. **Entrar al contenedor de desarrollo**:
+
+   ```bash
+   docker exec -it my-service-dev sh
+   ```
+
+2. **Ejecutar la migración**:
+   Dentro del contenedor, ejecuta el siguiente comando para crear y aplicar la migración:
+
+   ```bash
+   pnpx prisma migrate dev --name init
+   ```
+
+3. **Verificar los datos en el navegador**:
+   Una vez que la migración se haya aplicado correctamente, puedes acceder a la ruta `/api/users` en tu navegador para verificar los datos:
+
+   ```bash
+   http://localhost:3000/api/users
+   ```
+
+   Esto debería mostrar los datos de los usuarios almacenados en la base de datos.
+
+### Nota:
+
+Asegúrate de que el servicio esté en ejecución antes de intentar acceder a la ruta. Si el servicio no está en ejecución, puedes iniciarlo con:
+
+```bash
+docker-compose up -d my-service-dev
+```
+
+````
+
+### Explicación:
+- **Entrar al contenedor**: El comando `docker exec -it my-service-dev sh` te permite acceder al contenedor de desarrollo.
+- **Ejecutar la migración**: `pnpx prisma migrate dev --name init` crea y aplica la migración en la base de datos.
+- **Verificar los datos**: Acceder a `http://localhost:3000/api/users` en el navegador te permite ver los datos de los usuarios almacenados en la base de datos.
+
 This development mode will work with **hot-reload** and expose a **debug port**, port `9229`, so later we can connect to it from our editor.
 
 Now, you should be able to start debugging configuring using your IDE. For example, if you are using vscode, you can create a `.vscode/launch.json` file with the following configuration:
@@ -93,7 +134,7 @@ Now, you should be able to start debugging configuring using your IDE. For examp
     }
   ]
 }
-```
+````
 
 Also, if you want to run the **production mode**, you can run:
 
@@ -105,7 +146,7 @@ This service is providing just a health endpoint which you can call to verify th
 
 ```bash
 curl --request GET \
-  --url http://localhost:3000/health
+  --url http://localhost:3000/api/health
 ```
 
 If you want to stop developing, you can stop the service running:
