@@ -109,12 +109,13 @@ Asegúrate de que el servicio esté en ejecución antes de intentar acceder a la
 docker-compose up -d my-service-dev
 ```
 
-````
-
 ### Explicación:
+
 - **Entrar al contenedor**: El comando `docker exec -it my-service-dev sh` te permite acceder al contenedor de desarrollo.
 - **Ejecutar la migración**: `pnpx prisma migrate dev --name init` crea y aplica la migración en la base de datos.
 - **Verificar los datos**: Acceder a `http://localhost:3000/api/users` en el navegador te permite ver los datos de los usuarios almacenados en la base de datos.
+
+````
 
 This development mode will work with **hot-reload** and expose a **debug port**, port `9229`, so later we can connect to it from our editor.
 
